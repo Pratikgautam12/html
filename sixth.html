@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOM Manipulation</title>
+</head>
+<body>
+    <ul id="myList">
+        <!-- Existing list items -->
+    </ul>
+
+    <script>
+        function createListItem() {
+            // Create a new li element
+            const listItem = document.createElement('li');
+
+            // Create a delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', function() {
+                listItem.remove(); // Delete the <li> when the button is clicked
+            });
+
+            // Create an edit button (even if the edit functionality is not implemented yet)
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+
+            // Add the buttons to the li element
+            listItem.appendChild(deleteButton);
+            listItem.appendChild(editButton);
+
+            // Add the li element to the ul
+            document.getElementById('myList').appendChild(listItem);
+        }
+
+        // Call createListItem to add a new item with delete and edit buttons
+        createListItem();
+    </script>
+</body>
+</html>
