@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOM Manipulation with Search</title>
+</head>
+<body>
+    <input type="text" id="addItemInput" placeholder="Enter item and description">
+    <button onclick="createListItem()">Add Item</button>
+    <input type="text" id="searchInput" placeholder="Search items">
+
+    <ul id="myList">
+        <!-- Existing list items -->
+    </ul>
+
+    <script>
+        function createListItem() {
+            const inputBox = document.getElementById('addItemInput');
+            const itemDescription = inputBox.value;
+            
+            // Separate the item name and description
+            const [itemName, itemDesc] = itemDescription.split('|');
+            
+            if (!itemName) {
+                alert('Please enter an item name.');
+                return;
+            }
+
+            // Create a new li element
+            const listItem = document.createElement('li');
+
+            // Create a delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', function() {
+                listItem.remove(); // Delete the <li> when the button is clicked
+            });
+
+            // Create an edit button (even if the edit functionality is not implemented yet)
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+
+            // Create a paragraph element to display the item name
+            const itemNameParagraph = document.createElement('p');
+            itemNameParagraph.textContent = 'Item: ' + itemName;
+
+            // Create a paragraph element to display the item description
+            const itemDescriptionParagraph = document.createElement('p');
+            itemDescriptionParagraph.textContent = 'Description: ' + itemDesc;
+
+            // Add the buttons and item information to the li element
+            listItem.appendChild(deleteButton);
+            listItem.appendChild(editButton);
+            listItem.appendChild(itemNameParagraph);
+            listItem.appendChild(itemDescriptionParagraph);
+
+            // Add the li element to the ul
+            document.getElementById('myList').appendChild(listItem);
+
+            // Clear the input box
+            inputBox.value = '';
+        }
+
+        function filterItems() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+            const items = document.querySelectorAll('#myList li');
+
+            items.forEach(item => {
+                const itemName = item.querySelector('p:first-child').textContent.toLowerCase();
+                const itemDescription = item.querySelector('p:nth-child(3)').textContent.toLowerCase();
+                if (itemName.includes(searchTerm) || itemDescription.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Call createListItem to add a new item with delete and edit buttons
+        document.getElementById('addItemInput').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                createListItem();
+            }
+        });
+
+        // Add event listener for search input
+        document.getElementById('searchInput').addEventListener('keyup', filterItems);
+    </script>
+</body>
+</html>
