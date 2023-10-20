@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Details Storage</title>
+</head>
+<body>
+    <form id="userForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <button type="button" onclick="storeUserDetails()">Submit</button>
+    </form>
+
+    <script>
+        function storeUserDetails() {
+            // Get the user details from the form
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            // Check if local storage is supported by the browser
+            if (typeof(Storage) !== "undefined") {
+                // Get the existing user details or initialize an empty array
+                const userDetailsList = JSON.parse(localStorage.getItem('userDetailsList')) || [];
+
+                // Create a user object
+                const user = {
+                    name: name,
+                    email: email
+                };
+
+                // Add the user object to the array
+                userDetailsList.push(user);
+
+                // Store the updated array in local storage
+                localStorage.setItem('userDetailsList', JSON.stringify(userDetailsList));
+
+                // Display a confirmation message
+                alert('User details have been stored in local storage.');
+                
+                // Clear the form fields
+                document.getElementById('name').value = '';
+                document.getElementById('email').value = '';
+            } else {
+                alert('Local storage is not supported by your browser.');
+            }
+        }
+    </script>
+</body>
+</html>
