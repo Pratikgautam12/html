@@ -1,0 +1,94 @@
+//html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item List App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Item List</h1>
+        <input type="text" id="newItem" placeholder="Add a new item...">
+        <button onclick="addItem()">Add Item</button>
+        <ul id="itemList"></ul>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+//css-----------------------------------------------------------------
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"] {
+    width: 70%;
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.delete-btn {
+    margin-left: auto;
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+//js--------------------------------------------
+function addItem() {
+    var newItemText = document.getElementById('newItem').value;
+
+    if (newItemText.trim() !== '') {
+        var itemList = document.getElementById('itemList');
+        var li = document.createElement('li');
+        li.innerHTML = `
+            <span>${newItemText}</span>
+            <button class="delete-btn" onclick="removeItem(this)">Delete</button>
+        `;
+        itemList.appendChild(li);
+
+        document.getElementById('newItem').value = '';
+    }
+}
+
+function removeItem(button) {
+    var item = button.parentElement;
+    item.remove();
+}
