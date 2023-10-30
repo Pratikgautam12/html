@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Registration Page</title>
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <form id="registration-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div id="message"></div>
+
+    <script>
+        // JavaScript
+        const registrationForm = document.getElementById('registration-form');
+        const message = document.getElementById('message');
+
+        registrationForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.status === 200) {
+                    message.innerHTML = 'Registration successful! You can now login.';
+                } else {
+                    message.innerHTML = data.error || 'Registration failed.';
+                }
+            } catch (error) {
+                message.innerHTML = 'An error occurred. Please try again later.';
+            }
+        });
+    </script>
+</body>
+</html>
