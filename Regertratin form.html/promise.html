@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* CSS styles go here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>Posts and User Activity</h1>
+
+    <script>
+        const posts = [];
+        let lastActivityTime = new Date().toISOString();
+
+        // Simulated function to create a post
+        function createPost(post) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    posts.push(post);
+                    resolve();
+                }, 1000); // Simulating a 1-second delay for creating a post
+            });
+        }
+
+        // Function to update the user's last activity time
+        function updateLastUserActivityTime() {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    lastActivityTime = new Date().toISOString();
+                    resolve(lastActivityTime);
+                }, 1000); // Simulating a 1-second delay for updating the last activity time
+            });
+        }
+
+        // Function to delete the last post
+        function deleteLastPost() {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (posts.length > 0) {
+                        const deletedPost = posts.pop();
+                        resolve(deletedPost);
+                    } else {
+                        reject("ERROR: No posts to delete");
+                    }
+                }, 1000); // Simulating a 1-second delay for deleting a post
+            });
+        }
+
+        // Create a post and update the last activity time
+        createPost({ title: 'New Post' })
+            .then(() => updateLastUserActivityTime())
+            .then(() => {
+                // Use Promise.all to wait for both promises to resolve
+                return Promise.all([createPost({ title: 'Another Post' }), updateLastUserActivityTime()]);
+            })
+            .then(([_, updatedTime]) => {
+                // Delete the last post and log remaining posts
+                return deleteLastPost()
+                    .then(deletedPost => {
+                        console.log("Posts:", posts);
+                        console.log("Last Activity Time:", updatedTime);
+                        console.log("Deleted Post:", deletedPost);
+                        console.log("Remaining Posts:", posts);
+                    })
+                    .catch(error => {
+                        console.log("Error:", error);
+                    });
+            })
+            .catch(error => {
+                console.log("Error:", error);
+            });
+    </script>
+</body>
+</html>
