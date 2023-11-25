@@ -1,0 +1,97 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const PORT = 3000;
+
+app.use(bodyParser.json());
+
+// Dummy database
+let products = [];
+const sellingPrice = 2000;
+
+// Route to handle fetching all products
+app.get('/api/products', (req, res) => {
+    res.json({ sellingPrice, products });
+});
+
+// Route to handle adding a new product with selling price
+app.post('/api/products', (req, res) => {
+    const { name, sellingPrice } = req.body;
+
+    if (!name || !sellingPrice) {
+        return res.status(400).json({ error: 'Product name and selling price are required' });
+    }
+
+    const newProduct = {
+        id: products.length + 1,
+        name,
+        sellingPrice,
+    };
+
+    products.push(newProduct);
+
+    res.json({ sellingPrice, product: newProduct });
+});
+
+// Serve the HTML and JS for the frontend
+app.get('/', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>E-commerce Setup</title>
+        </head>
+        <body>
+            <h1>Selling price: $${sellingPrice}</h1>
+            <div id="productList"></div>
+            <button onclick="addProduct()">Add Product</button>
+
+            <script>
+                async function fetchProducts() {
+                    const response = await fetch('/api/products');
+                    const { sellingPrice, products } = await response.json();
+                    const productList = document.getElementById('productList');
+
+                    productList.innerHTML = '';
+
+                    products.forEach(product => {
+                        const productInfo = document.createElement('div');
+                        productInfo.innerHTML = `
+                            <h2>Product Name: ${product.name}</h2>
+                            <p>Selling Price: $${product.sellingPrice}</p>
+                        `;
+                        productList.appendChild(productInfo);
+                    });
+                }
+
+                async function addProduct() {
+                    const name = prompt('Enter product name:');
+                    const sellingPrice = prompt('Enter selling price:');
+
+                    if (name && sellingPrice) {
+                        await fetch('/api/products', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ name, sellingPrice }),
+                        });
+                        fetchProducts(); // Update the product list
+                    } else {
+                        alert('Product name and selling price cannot be empty. Please try again.');
+                    }
+                }
+
+                // Initial fetch on page load
+                fetchProducts();
+            </script>
+        </body>
+        </html>
+    `);
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
